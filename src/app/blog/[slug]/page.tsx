@@ -4,13 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getAllPostSlugs, getPostData } from '@/lib/blog';
 import { formatDate } from '@/lib/utils';
-import { serialize } from 'next-mdx-remote/serialize';
-import rehypeImgSize from 'rehype-img-size';
-import rehypeSlug from 'rehype-slug';
-import MDXContent from '@/components/MDXContent';
 import { format } from 'date-fns';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { components } from '@/components/mdx-components';
 
 type Props = {
   params: {
@@ -111,9 +105,7 @@ export default async function BlogPost({ params }: Props) {
           </div>
         )}
         
-        <div className="mt-8">
-          <MDXRemote source={post.content} components={components} />
-        </div>
+        <div className="mt-8 prose dark:prose-invert lg:prose-lg" dangerouslySetInnerHTML={{ __html: post.content }} />
         
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
           <Link 
