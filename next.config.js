@@ -3,8 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: [process.env.VERCEL_URL, 'localhost', process.env.HEROKU_APP_NAME ? `${process.env.HEROKU_APP_NAME}.herokuapp.com` : ''],
     unoptimized: process.env.NODE_ENV === 'production',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.herokuapp.com',
+      },
+    ],
   },
   webpack: (config, { isServer }) => {
     // Only include the fs module in server-side builds

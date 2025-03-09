@@ -19,6 +19,7 @@ export default function Home() {
                 src="/images/profile.jpg" 
                 alt="Richard Wolff" 
                 fill
+                sizes="(max-width: 768px) 128px, 192px"
                 style={{ objectFit: 'cover' }}
                 priority
                 unoptimized={process.env.NODE_ENV === 'production'}
