@@ -1,0 +1,115 @@
+/* Editor container */
+.wysiwyg-editor {
+  @apply border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden;
+}
+
+/* Toolbar */
+.editor-toolbar {
+  @apply flex flex-wrap items-center gap-1 p-2 border-b border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800;
+}
+
+.toolbar-group {
+  @apply flex items-center border-r border-gray-300 dark:border-gray-700 pr-2 mr-2 last:border-r-0 last:pr-0 last:mr-0;
+}
+
+.toolbar-button {
+  @apply p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300;
+}
+
+.toolbar-button.is-active {
+  @apply bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400;
+}
+
+/* Color picker */
+.color-picker-container {
+  @apply relative;
+}
+
+.color-picker-dropdown {
+  @apply absolute top-full left-0 mt-1 p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded shadow-lg z-10 grid grid-cols-4 gap-1;
+}
+
+.color-swatch {
+  @apply w-6 h-6 border border-gray-300 rounded cursor-pointer;
+}
+
+.color-input {
+  @apply w-6 h-6 cursor-pointer;
+}
+
+/* Editor content */
+.editor-content {
+  @apply p-4 min-h-[300px] max-h-[600px] overflow-y-auto bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+}
+
+/* Typography */
+.editor-content h1 {
+  @apply text-3xl font-bold mt-6 mb-4;
+}
+
+.editor-content h2 {
+  @apply text-2xl font-bold mt-5 mb-3;
+}
+
+.editor-content h3 {
+  @apply text-xl font-bold mt-4 mb-2;
+}
+
+.editor-content p {
+  @apply my-3;
+}
+
+.editor-content ul {
+  @apply list-disc pl-6 my-3;
+}
+
+.editor-content ol {
+  @apply list-decimal pl-6 my-3;
+}
+
+.editor-content blockquote {
+  @apply border-l-4 border-gray-300 dark:border-gray-700 pl-4 italic my-4 text-gray-700 dark:text-gray-300;
+}
+
+/* Links */
+.editor-content .editor-link {
+  @apply text-blue-600 dark:text-blue-400 underline;
+}
+
+/* Code */
+.editor-content code {
+  @apply font-mono bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm;
+}
+
+/* Code blocks */
+.code-block-wrapper {
+  @apply relative my-4 rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700;
+}
+
+.code-block {
+  @apply font-mono text-sm p-4 overflow-x-auto bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100;
+}
+
+.code-block-language {
+  @apply absolute top-2 right-2 text-xs bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1;
+}
+
+/* Image placeholder */
+.image-placeholder {
+  @apply bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-8 text-center text-gray-500 dark:text-gray-400 my-4;
+}
+
+/* Image */
+.editor-content img {
+  @apply max-w-full h-auto rounded-lg my-4;
+}
+
+/* ProseMirror specific */
+.ProseMirror {
+  @apply outline-none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  @apply text-gray-400 dark:text-gray-600 float-left h-0 pointer-events-none;
+  content: attr(data-placeholder);
+} 

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ImageDocsModal from './ImageDocsModal';
 import { useAuth } from '@/context/AuthContext';
+import WysiwygEditor from './editor/WysiwygEditor';
 
 export default function NewBlogPostForm() {
   const router = useRouter();
@@ -40,6 +41,10 @@ export default function NewBlogPostForm() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleContentChange = (content: string) => {
+    setFormData({ ...formData, content });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -228,15 +233,13 @@ export default function NewBlogPostForm() {
               i
             </button>
           </div>
-          <textarea
-            id="content"
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            required
-            rows={15}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-          />
+          <div className="mt-1">
+            <WysiwygEditor 
+              content={formData.content} 
+              onChange={handleContentChange} 
+              placeholder="Start writing your blog post..."
+            />
+          </div>
         </div>
 
         <div>
