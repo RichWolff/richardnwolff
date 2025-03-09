@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import jwt from 'jsonwebtoken';
+import { prisma } from '../../../../lib/prisma';
 
-const postsDirectory = path.join(process.cwd(), 'content/blog');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // Helper function to verify JWT token
@@ -35,21 +32,22 @@ export async function GET(
   try {
     const user = verifyToken(request);
     const { slug } = params;
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`);
     
-    // Check if file exists
-    if (!fs.existsSync(fullPath)) {
+    // Get post from database
+    const post = await prisma.blogPost.findUnique({
+      where: { slug }
+    });
+    
+    // Check if post exists
+    if (!post) {
       return NextResponse.json(
         { error: 'Post not found' },
         { status: 404 }
       );
     }
     
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const matterResult = matter(fileContents);
-    
     // Check if post is a draft and user is not authenticated
-    if (matterResult.data.status === 'draft' && !user) {
+    if (post.status === 'draft' && !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -57,9 +55,18 @@ export async function GET(
     }
     
     return NextResponse.json({
-      slug,
-      content: matterResult.content,
-      ...matterResult.data
+      slug: post.slug,
+      title: post.title,
+      date: post.date.toISOString(),
+      publishedAt: post.publishedAt.toISOString(),
+      updatedAt: post.updatedAt.toISOString(),
+      author: post.author,
+      excerpt: post.excerpt,
+      content: post.content,
+      category: post.category,
+      status: post.status,
+      image: post.image,
+      tags: post.tags
     });
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -85,17 +92,20 @@ export async function PUT(
     }
     
     const { slug } = params;
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`);
     
-    // Check if file exists
-    if (!fs.existsSync(fullPath)) {
+    // Check if post exists
+    const existingPost = await prisma.blogPost.findUnique({
+      where: { slug }
+    });
+    
+    if (!existingPost) {
       return NextResponse.json(
         { error: 'Post not found' },
         { status: 404 }
       );
     }
     
-    const { title, excerpt, content, category, status, image } = await request.json();
+    const { title, excerpt, content, category, status, image, tags } = await request.json();
     
     // Validate required fields
     if (!title || !content || !category) {
@@ -105,31 +115,32 @@ export async function PUT(
       );
     }
     
-    // Read existing file to get the original date
-    const existingFile = fs.readFileSync(fullPath, 'utf8');
-    const existingData = matter(existingFile).data;
-    
-    // Create frontmatter
-    const frontmatter = {
-      title,
-      date: existingData.date, // Keep the original date
-      author: existingData.author, // Keep the original author
-      excerpt: excerpt || '',
-      category,
-      status: status || 'draft',
-      image: image || existingData.image || '',
-    };
-    
-    // Create MDX content
-    const mdxContent = matter.stringify(content, frontmatter);
-    
-    // Write to file
-    fs.writeFileSync(fullPath, mdxContent);
+    // Update post in database
+    const updatedPost = await prisma.blogPost.update({
+      where: { slug },
+      data: {
+        title,
+        excerpt: excerpt || '',
+        content,
+        category,
+        status: status || 'draft',
+        image: image || null,
+        tags: Array.isArray(tags) ? tags : [],
+        updatedAt: new Date()
+      }
+    });
     
     return NextResponse.json({
       success: true,
-      slug,
-      ...frontmatter
+      slug: updatedPost.slug,
+      title: updatedPost.title,
+      date: updatedPost.date.toISOString(),
+      author: updatedPost.author,
+      excerpt: updatedPost.excerpt,
+      category: updatedPost.category,
+      status: updatedPost.status,
+      image: updatedPost.image,
+      tags: updatedPost.tags
     });
   } catch (error) {
     console.error('Error updating post:', error);
@@ -155,18 +166,23 @@ export async function DELETE(
     }
     
     const { slug } = params;
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`);
     
-    // Check if file exists
-    if (!fs.existsSync(fullPath)) {
+    // Check if post exists
+    const existingPost = await prisma.blogPost.findUnique({
+      where: { slug }
+    });
+    
+    if (!existingPost) {
       return NextResponse.json(
         { error: 'Post not found' },
         { status: 404 }
       );
     }
     
-    // Delete file
-    fs.unlinkSync(fullPath);
+    // Delete post from database
+    await prisma.blogPost.delete({
+      where: { slug }
+    });
     
     return NextResponse.json({
       success: true,
