@@ -21,6 +21,7 @@ export default function Home() {
                 fill
                 style={{ objectFit: 'cover' }}
                 priority
+                unoptimized={process.env.NODE_ENV === 'production'}
               />
             </div>
           </div>
