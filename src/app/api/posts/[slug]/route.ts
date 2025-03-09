@@ -184,6 +184,22 @@ export async function DELETE(
       where: { slug }
     });
     
+    // Attempt to revalidate the blog pages to clear cache
+    try {
+      // This is a Next.js App Router API route, so we need to use the revalidatePath function
+      // from next/cache to revalidate the blog pages
+      const { revalidatePath } = await import('next/cache');
+      
+      // Revalidate the blog index page and the specific post page
+      revalidatePath('/blog');
+      revalidatePath(`/blog/${slug}`);
+      
+      console.log(`Revalidated paths: /blog and /blog/${slug}`);
+    } catch (revalidateError) {
+      console.error('Error revalidating paths:', revalidateError);
+      // Continue with the response even if revalidation fails
+    }
+    
     return NextResponse.json({
       success: true,
       message: 'Post deleted successfully'

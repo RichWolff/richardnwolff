@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   description: 'Insights and thoughts on data science, analytics, and business intelligence from Richard Wolff.',
 };
 
+// Force dynamic rendering and revalidation on every request
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
+
 // This is a server component, so we can use the blog library directly
 export default async function Blog() {
   // Only show published posts to public visitors
