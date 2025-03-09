@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import NewBlogPostForm from '@/components/NewBlogPostForm';
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'New Blog Post | Richard Wolff',
   description: 'Create a new blog post for Richard Wolff\'s blog.',

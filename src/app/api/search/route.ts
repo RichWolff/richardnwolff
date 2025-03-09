@@ -4,6 +4,9 @@ import path from 'path';
 import matter from 'gray-matter';
 import jwt from 'jsonwebtoken';
 
+// Tell Next.js this route should be dynamic
+export const dynamic = 'force-dynamic';
+
 const postsDirectory = path.join(process.cwd(), 'content/blog');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 

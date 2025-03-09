@@ -26,6 +26,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check if user is logged in
     const checkAuth = () => {
+      // Only access localStorage in the browser
+      if (typeof window === 'undefined') {
+        setIsLoading(false);
+        return;
+      }
+      
       const token = localStorage.getItem('authToken');
       const userData = localStorage.getItem('userData');
       
@@ -69,11 +75,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json();
       
       if (response.ok && data.success) {
-        // Store the JWT token
-        localStorage.setItem('authToken', data.token);
-        
-        // Store user data
-        localStorage.setItem('userData', JSON.stringify(data.user));
+        // Only access localStorage in the browser
+        if (typeof window !== 'undefined') {
+          // Store the JWT token
+          localStorage.setItem('authToken', data.token);
+          
+          // Store user data
+          localStorage.setItem('userData', JSON.stringify(data.user));
+        }
         
         // Set user state
         setUser({
@@ -95,9 +104,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
   
   const logout = () => {
-    // Remove auth token and user data
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
+    // Only access localStorage in the browser
+    if (typeof window !== 'undefined') {
+      // Remove auth token and user data
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+    }
     
     // Clear user
     setUser(null);

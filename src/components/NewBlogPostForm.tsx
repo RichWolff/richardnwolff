@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ImageDocsModal from './ImageDocsModal';
@@ -24,9 +24,16 @@ export default function NewBlogPostForm() {
     tags: '',
   });
 
-  // Redirect if not authenticated
-  if (!isAuthenticated) {
-    router.push('/login');
+  // Use useEffect for client-side only code
+  useEffect(() => {
+    // Redirect if not authenticated
+    if (!isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, router]);
+
+  // If not authenticated and we're in the browser, return null
+  if (typeof window !== 'undefined' && !isAuthenticated) {
     return null;
   }
 
@@ -63,8 +70,12 @@ export default function NewBlogPostForm() {
     setError(null);
 
     try {
-      // Get auth token
-      const token = localStorage.getItem('authToken');
+      // Get auth token - safely check for localStorage
+      let token = null;
+      if (typeof window !== 'undefined') {
+        token = localStorage.getItem('authToken');
+      }
+      
       if (!token) {
         setError('You must be logged in to create a post');
         setIsSubmitting(false);
