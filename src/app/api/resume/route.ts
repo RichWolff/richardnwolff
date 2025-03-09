@@ -18,59 +18,19 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST to add a new resume item
+// POST endpoint for updating resume data - requires authentication
 export async function POST(request: NextRequest) {
   try {
-    const user = verifyToken(request);
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-    
-    const { section, item } = await request.json();
-    
-    // Validate input
-    if (!section || !item) {
-      return NextResponse.json(
-        { error: 'Section and item data are required' },
-        { status: 400 }
-      );
-    }
-    
-    // Valid sections
-    const validSections = ['experience', 'education', 'skills', 'certifications'];
-    if (!validSections.includes(section)) {
-      return NextResponse.json(
-        { error: 'Invalid section' },
-        { status: 400 }
-      );
-    }
-    
-    // Get current resume data
-    const resumeData = initResumeFile();
-    
-    // Add new item with ID
-    const newItem = {
-      id: Date.now().toString(),
-      ...item,
-      dateAdded: new Date().toISOString()
-    };
-    
-    resumeData[section].push(newItem);
-    
-    // Save updated data
-    fs.writeFileSync(resumeFilePath, JSON.stringify(resumeData, null, 2));
-    
-    return NextResponse.json({
-      success: true,
-      item: newItem
-    });
-  } catch (error) {
-    console.error('Error adding resume item:', error);
+    // Authentication would be implemented here
+    // For now, return unauthorized
     return NextResponse.json(
-      { error: 'Failed to add resume item' },
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  } catch (error) {
+    console.error('Error updating resume data:', error);
+    return NextResponse.json(
+      { error: 'Failed to update resume data' },
       { status: 500 }
     );
   }
