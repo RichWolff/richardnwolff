@@ -1,4 +1,4 @@
-// Custom server for Dreamhost deployment
+// Custom server for Heroku deployment
 const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
@@ -8,7 +8,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-// Define the port (Dreamhost typically assigns a port)
+// Define the port (Heroku assigns a port via process.env.PORT)
 const port = process.env.PORT || 3000;
 
 app.prepare().then(() => {
@@ -20,6 +20,6 @@ app.prepare().then(() => {
     handle(req, res, parsedUrl);
   }).listen(port, (err) => {
     if (err) throw err;
-    console.log(`> Ready on http://localhost:${port}`);
+    console.log(`> Ready on port ${port}`);
   });
 }); 
