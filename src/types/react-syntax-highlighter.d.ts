@@ -1,0 +1,132 @@
+declare module 'react-syntax-highlighter' {
+  import { ReactNode } from 'react';
+  
+  export interface SyntaxHighlighterProps {
+    language?: string;
+    style?: any;
+    children?: ReactNode;
+    className?: string;
+    [key: string]: any;
+  }
+  
+  export const Prism: React.FC<SyntaxHighlighterProps>;
+  export const Light: React.FC<SyntaxHighlighterProps>;
+  export default React.FC<SyntaxHighlighterProps>;
+}
+
+declare module 'react-syntax-highlighter/dist/cjs/styles/prism' {
+  export const vscDarkPlus: any;
+  export const atomDark: any;
+  export const base16AteliersulphurpoolLight: any;
+  export const cb: any;
+  export const darcula: any;
+  export const duotoneDark: any;
+  export const duotoneLight: any;
+  export const ghcolors: any;
+  export const hopscotch: any;
+  export const materialDark: any;
+  export const materialLight: any;
+  export const materialOceanic: any;
+  export const nord: any;
+  export const okaidia: any;
+  export const prism: any;
+  export const shadesOfPurple: any;
+  export const synthwave84: any;
+  export const vs: any;
+  export const vsDark: any;
+  export const xonokai: any;
+}
+
+declare module 'react-syntax-highlighter/dist/cjs/styles/hljs' {
+  export const a11yDark: any;
+  export const a11yLight: any;
+  export const agate: any;
+  export const anOldHope: any;
+  export const androidstudio: any;
+  export const arduinoLight: any;
+  export const arta: any;
+  export const ascetic: any;
+  export const atelierCaveDark: any;
+  export const atelierCaveLight: any;
+  export const atelierDuneDark: any;
+  export const atelierDuneLight: any;
+  export const atelierEstuaryDark: any;
+  export const atelierEstuaryLight: any;
+  export const atelierForestDark: any;
+  export const atelierForestLight: any;
+  export const atelierHeathDark: any;
+  export const atelierHeathLight: any;
+  export const atelierLakesideDark: any;
+  export const atelierLakesideLight: any;
+  export const atelierPlateauDark: any;
+  export const atelierPlateauLight: any;
+  export const atelierSavannaDark: any;
+  export const atelierSavannaLight: any;
+  export const atelierSeasideDark: any;
+  export const atelierSeasideLight: any;
+  export const atelierSulphurpoolDark: any;
+  export const atelierSulphurpoolLight: any;
+  export const atomOneDark: any;
+  export const atomOneLight: any;
+  export const codepen: any;
+  export const colorBrewer: any;
+  export const darcula: any;
+  export const dark: any;
+  export const defaultStyle: any;
+  export const docco: any;
+  export const dracula: any;
+  export const far: any;
+  export const foundation: any;
+  export const githubGist: any;
+  export const github: any;
+  export const gml: any;
+  export const googlecode: any;
+  export const gradientDark: any;
+  export const grayscale: any;
+  export const gruvboxDark: any;
+  export const gruvboxLight: any;
+  export const hopscotch: any;
+  export const hybrid: any;
+  export const idea: any;
+  export const irBlack: any;
+  export const isblEditorDark: any;
+  export const isblEditorLight: any;
+  export const kimbieDark: any;
+  export const kimbieLight: any;
+  export const lightfair: any;
+  export const lioshi: any;
+  export const magula: any;
+  export const monoBlue: any;
+  export const monokaiSublime: any;
+  export const monokai: any;
+  export const nightOwl: any;
+  export const nnfxDark: any;
+  export const nnfx: any;
+  export const nord: any;
+  export const obsidian: any;
+  export const ocean: any;
+  export const paraisoDark: any;
+  export const paraisoLight: any;
+  export const pojoaque: any;
+  export const purebasic: any;
+  export const qtcreatorDark: any;
+  export const qtcreatorLight: any;
+  export const railscasts: any;
+  export const rainbow: any;
+  export const routeros: any;
+  export const schoolBook: any;
+  export const shadesOfPurple: any;
+  export const solarizedDark: any;
+  export const solarizedLight: any;
+  export const sunburst: any;
+  export const tomorrowNightBlue: any;
+  export const tomorrowNightBright: any;
+  export const tomorrowNightEighties: any;
+  export const tomorrowNight: any;
+  export const tomorrow: any;
+  export const vs: any;
+  export const vs2015: any;
+  export const xcode: any;
+  export const xt256: any;
+  export const zenburn: any;
+} 
