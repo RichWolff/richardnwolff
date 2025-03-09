@@ -53,20 +53,29 @@ export default function LinkModal({
   };
 
   const handleSelectPost = (post: any) => {
+    // Create the URL for the post
     const postUrl = `/blog/${post.slug}`;
+    
+    // Use the post title as the link text
     const postTitle = post.title;
     
-    // Set the URL and text
+    console.log('Post selected:', { post, url: postUrl, title: postTitle });
+    
+    // Always use the post title as the link text for consistency
+    const linkText = postTitle;
+    
+    // Update the form fields (though they won't be visible as we're closing the modal)
     setUrl(postUrl);
-    const linkText = text || postTitle;
     setText(linkText);
     
-    // Submit the form and close the modal
-    onSubmit(postUrl, linkText);
-    onClose();
+    // Submit the form with both URL and text
+    console.log('Submitting with:', { url: postUrl, text: linkText });
     
-    // Log for debugging
-    console.log('Selected post:', { post, url: postUrl, text: linkText });
+    // Call onSubmit with both URL and text to ensure the link is created
+    onSubmit(postUrl, linkText);
+    
+    // Close the modal
+    onClose();
   };
 
   return (

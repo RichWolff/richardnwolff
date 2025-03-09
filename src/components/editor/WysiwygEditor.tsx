@@ -170,10 +170,47 @@ export default function WysiwygEditor({ content, onChange, placeholder = 'Start 
     }
   }, [editor]);
 
+  // Helper function to insert a link directly
+  const insertLinkDirectly = useCallback((url: string, text: string) => {
+    if (!editor) return;
+    
+    try {
+      // Focus the editor first
+      editor.commands.focus();
+      
+      // Delete any selected text
+      if (!editor.view.state.selection.empty) {
+        editor.commands.deleteSelection();
+      }
+      
+      // Create HTML for the link with proper escaping
+      const escapedUrl = url.replace(/"/g, '&quot;');
+      const escapedText = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+      
+      const linkHTML = `<a href="${escapedUrl}">${escapedText}</a>`;
+      
+      // Insert the HTML directly
+      editor.commands.insertContent(linkHTML);
+      
+      // Log for debugging
+      console.log('Link inserted directly:', { url, text, html: linkHTML });
+      return true;
+    } catch (error) {
+      console.error('Error inserting link directly:', error);
+      return false;
+    }
+  }, [editor]);
+
   const handleLinkSubmit = useCallback((url: string, text?: string) => {
     if (!editor) return;
     
     try {
+      console.log('Inserting link with:', { url, text });
+      
       // First, restore the selection if we have one
       if (linkSelection) {
         try {
@@ -189,25 +226,8 @@ export default function WysiwygEditor({ content, onChange, placeholder = 'Start 
       
       // If we have text, insert it with the link
       if (text && text.trim()) {
-        // First check if there's already selected text
-        const hasSelection = !editor.view.state.selection.empty;
-        
-        if (hasSelection) {
-          // If text is already selected, replace it with the new text and link
-          editor.chain()
-            .focus()
-            .deleteSelection()
-            .insertContent(text)
-            .setLink({ href: url })
-            .run();
-        } else {
-          // If no text is selected, just insert the new text with link
-          editor.chain()
-            .focus()
-            .insertContent(text)
-            .setLink({ href: url })
-            .run();
-        }
+        // Use our direct link insertion method
+        insertLinkDirectly(url, text);
       } else {
         // If no text provided, just convert the selected text to a link
         editor.chain()
@@ -218,7 +238,7 @@ export default function WysiwygEditor({ content, onChange, placeholder = 'Start 
       }
       
       // Log success for debugging
-      console.log('Link inserted successfully:', { url, text });
+      console.log('Link insertion completed');
     } catch (error) {
       console.error('Error inserting link:', error);
     }
@@ -228,7 +248,7 @@ export default function WysiwygEditor({ content, onChange, placeholder = 'Start 
     setLinkUrl('');
     setLinkText('');
     setLinkSelection(null);
-  }, [editor, linkSelection]);
+  }, [editor, linkSelection, insertLinkDirectly]);
 
   const handleInternalLinkSearch = useCallback(async (query: string) => {
     if (query.length < 2) {
