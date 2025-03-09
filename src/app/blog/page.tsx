@@ -11,11 +11,11 @@ export const metadata: Metadata = {
 };
 
 // This is a server component, so we can use the blog library directly
-export default function Blog() {
+export default async function Blog() {
   // Only show published posts to public visitors
-  const allPosts = getSortedPostsData();
+  const allPosts = await getSortedPostsData();
   const posts = allPosts.filter(post => post.status === 'published');
-  const allTags = getAllTags();
+  const allTags = await getAllTags();
 
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

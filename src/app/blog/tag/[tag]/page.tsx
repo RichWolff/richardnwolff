@@ -21,16 +21,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// Generate static params for all tags
 export async function generateStaticParams() {
-  const tags = getAllTags();
-  return tags.map(tag => ({
-    tag: encodeURIComponent(tag),
-  }));
+  const tags = await getAllTags();
+  return tags.map(tag => ({ tag: encodeURIComponent(tag) }));
 }
 
-export default function TagPage({ params }: Props) {
+export default async function TagPage({ params }: Props) {
   const decodedTag = decodeURIComponent(params.tag);
-  const allTags = getAllTags();
+  const allTags = await getAllTags();
   
   // Check if tag exists
   if (!allTags.includes(decodedTag)) {
@@ -38,7 +37,8 @@ export default function TagPage({ params }: Props) {
   }
   
   // Get posts with this tag
-  const posts = getPostsByTag(decodedTag).filter(post => post.status === 'published');
+  const posts = await getPostsByTag(decodedTag);
+  const publishedPosts = posts.filter(post => post.status === 'published');
 
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -48,7 +48,7 @@ export default function TagPage({ params }: Props) {
             Posts tagged with <span className="text-blue-600">#{decodedTag}</span>
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            {posts.length} {posts.length === 1 ? 'post' : 'posts'} found
+            {publishedPosts.length} {publishedPosts.length === 1 ? 'post' : 'posts'} found
           </p>
         </div>
         
@@ -57,7 +57,7 @@ export default function TagPage({ params }: Props) {
         <TagFilter tags={allTags} />
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
-          {posts.map((post) => (
+          {publishedPosts.map((post) => (
             <article
               key={post.slug}
               className="group flex flex-col overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md"
@@ -120,7 +120,7 @@ export default function TagPage({ params }: Props) {
           ))}
         </div>
         
-        {posts.length === 0 && (
+        {publishedPosts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-xl text-gray-600 dark:text-gray-400">No published posts with this tag.</p>
             <Link href="/blog" className="mt-4 inline-block text-blue-600 hover:underline">

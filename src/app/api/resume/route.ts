@@ -1,49 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import jwt from 'jsonwebtoken';
+import { getResume } from '@/lib/resume';
 
-const resumeFilePath = path.join(process.cwd(), 'content/resume.json');
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-
-// Helper function to verify JWT token
-function verifyToken(request: NextRequest) {
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.split(' ')[1];
-  try {
-    return jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
-  } catch (error) {
-    return null;
-  }
-}
-
-// Initialize resume file if it doesn't exist
-function initResumeFile() {
-  if (!fs.existsSync(resumeFilePath)) {
-    const initialData = {
-      experience: [],
-      education: [],
-      skills: [],
-      certifications: []
-    };
-    fs.writeFileSync(resumeFilePath, JSON.stringify(initialData, null, 2));
-    return initialData;
-  }
-  
-  return JSON.parse(fs.readFileSync(resumeFilePath, 'utf8'));
-}
+export const dynamic = 'force-dynamic';
 
 // GET resume data
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Initialize resume file if it doesn't exist
-    const resumeData = initResumeFile();
+    const resume = await getResume();
     
-    return NextResponse.json(resumeData);
+    return NextResponse.json(resume);
   } catch (error) {
     console.error('Error fetching resume data:', error);
     return NextResponse.json(
