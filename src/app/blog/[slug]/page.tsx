@@ -105,7 +105,7 @@ export default async function BlogPost({ params }: Props) {
           </div>
         )}
         
-        <div className="mt-8 prose dark:prose-invert lg:prose-lg" dangerouslySetInnerHTML={{ __html: post.content }} />
+        <div className="mt-8 prose dark:prose-invert lg:prose-lg" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
         
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
           <Link 
