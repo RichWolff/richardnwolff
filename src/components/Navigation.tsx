@@ -3,12 +3,18 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useState } from 'react';
 
 export default function Navigation() {
   const pathname = usePathname();
   const { isAuthenticated, logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isActive = (path: string) => pathname === path;
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const links = [
     { href: '/', label: 'Home' },
@@ -69,14 +75,15 @@ export default function Navigation() {
             {/* Mobile menu button */}
             <button
               type="button"
+              onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               aria-controls="mobile-menu"
-              aria-expanded="false"
+              aria-expanded={isMenuOpen}
             >
               <span className="sr-only">Open main menu</span>
               {/* Icon when menu is closed */}
               <svg
-                className="block h-6 w-6"
+                className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -92,7 +99,7 @@ export default function Navigation() {
               </svg>
               {/* Icon when menu is open */}
               <svg
-                className="hidden h-6 w-6"
+                className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -112,12 +119,13 @@ export default function Navigation() {
       </div>
 
       {/* Mobile menu, show/hide based on menu state */}
-      <div className="sm:hidden" id="mobile-menu">
+      <div className={`${isMenuOpen ? 'block' : 'hidden'} sm:hidden`} id="mobile-menu">
         <div className="pt-2 pb-3 space-y-1">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => setIsMenuOpen(false)}
               className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
                 isActive(link.href)
                   ? 'bg-primary-dark border-accent text-white'
@@ -132,6 +140,7 @@ export default function Navigation() {
             <>
               <Link
                 href="/dashboard"
+                onClick={() => setIsMenuOpen(false)}
                 className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
                   isActive('/dashboard')
                     ? 'bg-primary-dark border-accent text-white'
@@ -141,7 +150,10 @@ export default function Navigation() {
                 Dashboard
               </Link>
               <button
-                onClick={logout}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  logout();
+                }}
                 className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-300 hover:bg-gray-700 hover:border-gray-300 hover:text-white"
               >
                 Logout
